@@ -27,7 +27,7 @@ import { usePopoverScroll } from './use-popover-scroll';
 
 function selector( select ) {
 	const {
-		isNavigationMode,
+		__unstableGetEditorMode,
 		isMultiSelecting,
 		hasMultiSelection,
 		isTyping,
@@ -36,7 +36,7 @@ function selector( select ) {
 		getLastMultiSelectedBlockClientId,
 	} = select( blockEditorStore );
 	return {
-		isNavigationMode: isNavigationMode(),
+		editorMode: __unstableGetEditorMode(),
 		isMultiSelecting: isMultiSelecting(),
 		isTyping: isTyping(),
 		isCaretWithinFormattedText: isCaretWithinFormattedText(),
@@ -56,7 +56,7 @@ function BlockPopover( {
 	__unstableContentRef,
 } ) {
 	const {
-		isNavigationMode,
+		editorMode,
 		isMultiSelecting,
 		isTyping,
 		isCaretWithinFormattedText,
@@ -90,17 +90,21 @@ function BlockPopover( {
 	// Controls when the side inserter on empty lines should
 	// be shown, including writing and selection modes.
 	const showEmptyBlockSideInserter =
-		! isTyping && ! isNavigationMode && isEmptyDefaultBlock && isValid;
-	const shouldShowBreadcrumb = isNavigationMode;
+		! isTyping &&
+		! editorMode === 'visual' &&
+		isEmptyDefaultBlock &&
+		isValid;
+	const shouldShowBreadcrumb =
+		editorMode === 'navigation' || editorMode === 'exploded';
 	const shouldShowContextualToolbar =
-		! isNavigationMode &&
+		editorMode === 'visual' &&
 		! hasFixedToolbar &&
 		isLargeViewport &&
 		! showEmptyBlockSideInserter &&
 		! isMultiSelecting &&
 		( ! isTyping || isCaretWithinFormattedText );
 	const canFocusHiddenToolbar =
-		! isNavigationMode &&
+		editorMode === 'visual' &&
 		! shouldShowContextualToolbar &&
 		! hasFixedToolbar &&
 		! isEmptyDefaultBlock;

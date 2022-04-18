@@ -352,7 +352,6 @@ function InsertionPointPopover( {
 }
 
 export default function InsertionPoint( {
-	children,
 	__unstablePopoverSlot,
 	__unstableContentRef,
 } ) {
@@ -361,14 +360,11 @@ export default function InsertionPoint( {
 	}, [] );
 
 	return (
-		<InsertionPointOpenRef.Provider value={ useRef( false ) }>
-			{ isVisible && (
-				<InsertionPointPopover
-					__unstablePopoverSlot={ __unstablePopoverSlot }
-					__unstableContentRef={ __unstableContentRef }
-				/>
-			) }
-			{ children }
-		</InsertionPointOpenRef.Provider>
+		isVisible && (
+			<InsertionPointPopover
+				__unstablePopoverSlot={ __unstablePopoverSlot }
+				__unstableContentRef={ __unstableContentRef }
+			/>
+		)
 	);
 }
